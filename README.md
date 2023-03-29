@@ -15,7 +15,7 @@ Each suspension component has the following parameters:
 A suspension component is a raycast. It casts down from the starting point until it touches the ground. The compression value is then calculated.
 
 0 = Fully extended
->1 = Fully compressed
+1 = Fully compressed
 
 Below is footage from my racing video game, using these principles as a starting base. 
 
