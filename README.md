@@ -2,7 +2,7 @@
 
 Implementation of raycast suspension using UE5's Chaos physics. Requires AsyncTickPhysics Plugin.
 
->Work in progress: to be refactored
+>Note: work in progress: to be refactored
 
 Starting point for creating vehicles from scratch.
 Each suspension component has the following parameters:
