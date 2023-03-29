@@ -9,9 +9,7 @@ USuspensionComponent::USuspensionComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
 	// ...
-	
 }
 
 
@@ -19,19 +17,14 @@ USuspensionComponent::USuspensionComponent()
 void USuspensionComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
 	// ...
-
 }
-
 
 // Called every frame
 void USuspensionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
 	DrawDebugVisuals();
-	
 }
 
 void USuspensionComponent::ComputeSuspensionData(float DeltaTime, FTransform BodyTransform)
@@ -40,14 +33,13 @@ void USuspensionComponent::ComputeSuspensionData(float DeltaTime, FTransform Bod
 	FCollisionQueryParams CollisionParams;
 	CollisionParams.AddIgnoredActor(GetOwner());
 	FHitResult Hit;
-
+        
+	//Define up vector from the body transform (Pretty much ATP friendly GetUpVector)
 	FVector Up = BodyTransform.GetUnitAxis(EAxis::Z);
 
 	//Calculate the end point of our line trace
 	FVector TraceStart = ComponentWorldLocation;
 	FVector TraceEnd = ComponentWorldLocation - (Up * Length);
-	//FVector TraceEnd = ComponentWorldLocation - (GetOwner()->GetActorUpVector() * Length);
-
 
 	//Check if suspension hit ground
 	if (GetWorld()->LineTraceSingleByChannel(Hit, TraceStart, TraceEnd, ECC_Visibility, CollisionParams))
@@ -67,7 +59,8 @@ void USuspensionComponent::ComputeSuspensionData(float DeltaTime, FTransform Bod
 	else
 	{
 		HitGround = false;
-		//If the vehicle is in the air, add no suspension force
+		
+		//If the suspension is not touching ground, apply no force on it
 		CurrentCompression = 0;
 		SuspensionForce = 0;
 		PreviousCompression = 0;
