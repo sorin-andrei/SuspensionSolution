@@ -23,7 +23,8 @@ AVehicle::AVehicle()
 	SuspensionFL = CreateDefaultSubobject<USuspensionComponent>("Suspension Front Left"); SuspensionFL->SetupAttachment(Body);
 	SuspensionRR = CreateDefaultSubobject<USuspensionComponent>("Suspension Rear Right"); SuspensionRR->SetupAttachment(Body);
 	SuspensionRL = CreateDefaultSubobject<USuspensionComponent>("Suspension Rear Left"); SuspensionRL->SetupAttachment(Body);
-
+        
+	//Store all suspensions in an array so we can easily loop through them
 	SuspensionArray = { SuspensionFR, SuspensionFL, SuspensionRR, SuspensionRL };
 }
 
@@ -133,8 +134,15 @@ bool AVehicle::IsGrounded()
 
 void AVehicle::LookAhead(FTransform VehicleTransform)
 {
-	//Convert look start origin - relative to world async
+	/***********************
+	The point of this function:
+	> Our vehicle can surpass 1000 km/h
+	> Raycasts do not keep up at such speeds, especially on sudden curvature changes of the road
+	> This function looks ahead and pre-applies a torque rotation if the road is suddenly ramping up
+	> Still WIP, still trying to get the right feeling
+	***********************/
 	
+	//Convert look start origin - relative to world async
 	FVector ATP_LookAheadOrigin = UKismetMathLibrary::TransformLocation(VehicleTransform, LookAheadOrigin);
 
 	float NewLookAheadDistance = Speed * 2.7f;
@@ -143,6 +151,7 @@ void AVehicle::LookAhead(FTransform VehicleTransform)
 	FVector TraceStart = ATP_LookAheadOrigin;
 	FVector TraceEnd = TraceStart + GetActorForwardVector() * NewLookAheadDistance;
     
+	//ArrowComponent data for use in blueprints
 	LookAheadStartDebug = TraceStart;
 	LookAheadEndDebug = TraceEnd;
 
